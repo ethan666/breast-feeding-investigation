@@ -5,10 +5,9 @@ function resolve(dir) {
 }
 
 module.exports = {
-  chainWebpack: config => {
-    //修改文件引入自定义路径
-    config.resolve.alias
-      .set("@$", resolve("src"))
-      .set("api", resolve("src/api"));
-  }
+  // chainWebpack: config => {
+  //   config.resolve.alias
+  //     .set("@$", resolve("src"))
+  //     .set("api", resolve("src/api"));
+  // }
 };
