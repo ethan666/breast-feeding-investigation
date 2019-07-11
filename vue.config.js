@@ -10,4 +10,15 @@ module.exports = {
   //     .set("@$", resolve("src"))
   //     .set("api", resolve("src/api"));
   // }
+
+  configureWebpack: {
+    resolve: {
+      extensions: [".js", ".vue", ".json"],
+      alias: {
+        api: "@/api",
+        components: "@/components",
+        views: "@/views"
+      }
+    }
+  }
 };
