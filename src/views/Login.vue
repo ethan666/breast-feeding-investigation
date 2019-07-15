@@ -45,6 +45,7 @@ export default {
         if (!err) {
           const res = await this.Login(values);
           console.log(res);
+          // this.$router.push({ name: "home" });
         }
       });
     }

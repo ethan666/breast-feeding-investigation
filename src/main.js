@@ -13,6 +13,7 @@ import {
   Modal,
   Table,
   Checkbox,
+  Divider,
   Icon,
   notification
 } from "ant-design-vue";
@@ -30,9 +31,14 @@ Vue.use(Modal);
 Vue.use(Table);
 Vue.use(Checkbox);
 Vue.use(Icon);
+Vue.use(Divider);
 Vue.use(notification);
 
 Vue.config.productionTip = false;
+
+router.beforeEach((to, from, next) => {
+  // ...
+});
 
 new Vue({
   router,
