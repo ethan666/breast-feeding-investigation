@@ -21,6 +21,16 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "login" */ "./views/Login.vue")
+    },
+    {
+      path: "/404",
+      component: () =>
+        import(/* webpackChunkName: "fail" */ "@/views/exception/404")
+    },
+    {
+      path: "*",
+      redirect: "/404",
+      hidden: true
     }
   ]
 });

@@ -36,9 +36,8 @@ Vue.use(notification);
 
 Vue.config.productionTip = false;
 
-router.beforeEach((to, from, next) => {
-  // ...
-});
+// router.beforeEach((to, from, next) => {
+// });
 
 new Vue({
   router,
