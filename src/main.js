@@ -36,6 +36,7 @@ Vue.use(notification);
 
 Vue.config.productionTip = false;
 
+// 判断是否登录状态，如果不是跳转到登录页面
 // router.beforeEach((to, from, next) => {
 // });
 

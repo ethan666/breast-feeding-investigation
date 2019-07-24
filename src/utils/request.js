@@ -7,7 +7,7 @@ import notification from "ant-design-vue/es/notification";
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: "/api", // api base_url
+  baseURL: "http://47.111.125.9:8080", // api base_url
   timeout: 6000 // 请求超时时间
 });
 
