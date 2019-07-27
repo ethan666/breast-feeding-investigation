@@ -56,6 +56,11 @@ service.interceptors.response.use(response => {
       message: "请重新登录",
       description: response.message
     });
+  } else if (response.code === 200) {
+    notification.info({
+      message: "提示",
+      description: response.message
+    });
   }
   return response.data;
 }, err);

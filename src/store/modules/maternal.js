@@ -1,9 +1,7 @@
-import { loginReq } from "@/api/user";
+import { addUserReq } from "@/api/maternal";
 
-const user = {
-  state: {
-    logined: false
-  },
+const maternal = {
+  state: {},
 
   mutations: {
     SET_LOGINED: (state, value) => {
@@ -12,10 +10,10 @@ const user = {
   },
 
   actions: {
-    // 登录
-    Login({ commit }, userInfo) {
+    // 添加产妇基本信息
+    AddMaternalBasicInfo({ commit }, info) {
       return new Promise((resolve, reject) => {
-        loginReq(userInfo)
+        addUserReq(info)
           .then(response => {
             if (response.code === "200" && response.data === true) {
               commit("SET_LOGINED", true);
@@ -32,4 +30,4 @@ const user = {
   }
 };
 
-export default user;
+export default maternal;

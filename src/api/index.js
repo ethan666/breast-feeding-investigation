@@ -1,7 +1,7 @@
 const api = {
-  Login: "/api/mrwy/login",
+  loginApi: "/api/mrwy/login",
+  addUserApi: "/api/mrwy/user/add",
   basicInfoQuery: "/api/mrwy/users/page/query",
-
   Logout: "/auth/logout",
   ForgePassword: "/auth/forge-password",
   Register: "/auth/register",

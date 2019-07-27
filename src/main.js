@@ -1,9 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import moment from "moment";
+import "moment/locale/zh-cn";
+
+moment.locale("zh-cn");
 
 import {
+  LocaleProvider,
   Input,
+  InputNumber,
   Button,
   Select,
   Card,
@@ -15,12 +21,15 @@ import {
   Checkbox,
   Divider,
   Icon,
-  notification
+  notification,
+  DatePicker
 } from "ant-design-vue";
 
 import store from "./store";
 
+Vue.use(LocaleProvider);
 Vue.use(Input);
+Vue.use(InputNumber);
 Vue.use(Button);
 Vue.use(Select);
 Vue.use(Card);
@@ -32,7 +41,10 @@ Vue.use(Table);
 Vue.use(Checkbox);
 Vue.use(Icon);
 Vue.use(Divider);
+Vue.use(DatePicker);
 Vue.use(notification);
+
+Vue.prototype.$notification = notification;
 
 Vue.config.productionTip = false;
 

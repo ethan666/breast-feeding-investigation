@@ -2,7 +2,7 @@ import api from "./index";
 import { axios } from "@/utils/request";
 
 /**
- * login func
+ * 添加产妇
  * parameter: {
  *     username: '',
  *     password: '',
@@ -10,9 +10,9 @@ import { axios } from "@/utils/request";
  * @param parameter
  * @returns {*}
  */
-export function login(parameter) {
+export function addUserReq(parameter) {
   return axios({
-    url: api.Login,
+    url: api.addUserApi,
     method: "post",
     data: parameter
   });

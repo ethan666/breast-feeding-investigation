@@ -41,12 +41,35 @@ export default {
     ...mapActions(["Login"]),
     handleSubmit(e) {
       e.preventDefault();
-      this.form.validateFields(async (err, values) => {
+      this.form.validateFields((err, values) => {
         if (!err) {
-          const res = await this.Login(values);
-          console.log(res);
-          // this.$router.push({ name: "home" });
+          this.Login(values)
+            .then(this.loginSuccess)
+            .catch(this.requestFailed)
+            .finally(() => {
+              // state.loginBtn = false;
+              console.log("login finally!");
+            });
         }
+      });
+    },
+    loginSuccess() {
+      this.$router.push({ name: "home" });
+      // 延迟 1 秒显示欢迎信息
+      setTimeout(() => {
+        this.$notification.success({
+          message: "欢迎",
+          description: `欢迎回来`
+        });
+      }, 1000);
+    },
+    requestFailed(err) {
+      this.$notification["error"]({
+        message: "错误",
+        description:
+          ((err.response || {}).data || {}).message ||
+          "请求出现错误，请稍后再试",
+        duration: 4
       });
     }
   }
