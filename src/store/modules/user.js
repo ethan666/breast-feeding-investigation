@@ -1,13 +1,17 @@
 import { loginReq } from "@/api/user";
 
+/**
+ * 登录用户
+ */
 const user = {
   state: {
     logined: false
   },
 
   mutations: {
-    SET_LOGINED: (state, value) => {
-      state.logined = value;
+    SET_LOGINED: (state, payload) => {
+      const { logined } = payload;
+      state.logined = logined;
     }
   },
 
@@ -18,7 +22,7 @@ const user = {
         loginReq(userInfo)
           .then(response => {
             if (response.code === "200" && response.data === true) {
-              commit("SET_LOGINED", true);
+              commit("SET_LOGINED", { logined: true });
               resolve();
             } else {
               reject(response.message);

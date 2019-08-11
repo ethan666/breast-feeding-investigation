@@ -1,6 +1,7 @@
 <template>
   <a-modal
     :visible="visible"
+    :maskClosable="false"
     title="入组确认"
     @cancel="cancelHandler"
     @ok="okHandler"
@@ -34,6 +35,38 @@
       <a-form-item
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
+        label="所在病区"
+      >
+        <a-select
+          v-decorator="[
+            'inpatientArea',
+            { rules: [{ required: true, message: '所在病区必填！' }] }
+          ]"
+        >
+          <a-select-option value="1">产科Ⅰ病区</a-select-option>
+          <a-select-option value="2">产科Ⅱ病区</a-select-option>
+          <a-select-option value="3">产科Ⅲ病区</a-select-option>
+          <a-select-option value="4">产科Ⅳ病区</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="入组时间"
+      >
+        <a-date-picker
+          v-decorator="[
+            'checkInTime',
+            {
+              initialValue: moment(Date.now()),
+              rules: [{ required: true, message: '入组时间必填！' }]
+            }
+          ]"
+        />
+      </a-form-item>
+      <!-- <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
         label="联系电话"
       >
         <a-input-number
@@ -46,21 +79,41 @@
       <a-form-item
         :labelCol="labelCol"
         :wrapperCol="wrapperCol"
-        label="录入时间"
+        label="文化程度"
       >
-        <a-date-picker
-          v-decorator="['checkInTime', { initialValue: moment(Date.now()) }]"
-        />
+        <a-input v-decorator="['education']" />
       </a-form-item>
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="婚姻状况"
+      >
+        <a-input v-decorator="['married']" />
+      </a-form-item>
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="产前身高"
+      >
+        <a-input-number v-decorator="['height']" />
+      </a-form-item>
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="产前体重"
+      >
+        <a-input-number v-decorator="['weight']" />
+      </a-form-item>-->
     </a-form>
   </a-modal>
 </template>
 
 <script>
-import { addUserReq } from "@/api/maternal";
+import { addMaternalReq } from "@/api/maternal";
 import moment from "moment";
 
 export default {
+  name: "BasicInfoFormModal",
   data() {
     return {
       form: this.$form.createForm(this),
@@ -76,13 +129,13 @@ export default {
     },
     okHandler() {
       this.form.validateFieldsAndScroll(async (err, values) => {
-        debugger;
         if (!err) {
           values.checkInTime = values.checkInTime.valueOf();
-          const res = await addUserReq(values);
+          const res = await addMaternalReq(values);
           if (res.code === "200" && res.data === true) {
             this.visible = false;
-            this.$emit("ok");
+            this.form.resetFields();
+            // this.$emit("ok");
           }
         }
       });

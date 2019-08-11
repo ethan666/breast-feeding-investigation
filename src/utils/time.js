@@ -1,3 +1,22 @@
+/**
+ * 将时间戳转化为可读格式
+ * @param {} time
+ * @param {*} fmt
+ */
+export function timeFtt(time, fmt) {
+  const timeNum = Number(time);
+  if (isNaN(timeNum)) {
+    return "";
+  }
+  const date = new Date(timeNum);
+  return dateFtt(date, fmt);
+}
+
+/**
+ * 将日期转化为可读格式，比如“2019-08-10”
+ * @param {} date
+ * @param {*} fmt
+ */
 export function dateFtt(date, fmt) {
   //author: meizz
   var o = {

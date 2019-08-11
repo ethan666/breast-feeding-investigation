@@ -2,6 +2,9 @@
   <div class="head">
     <div class="title">母乳喂养调查</div>
     <div class="time">{{ currentTime }}</div>
+    <a-button class="back-btn" type="primary" @click="backHome"
+      >返回首页</a-button
+    >
   </div>
 </template>
 
@@ -15,6 +18,11 @@ export default {
   computed: {
     currentTime() {
       return dateFtt(new Date(), "yyyy-MM-dd");
+    }
+  },
+  methods: {
+    backHome() {
+      this.$router.push({ name: "home" });
     }
   }
 };
@@ -40,6 +48,10 @@ export default {
     margin: 0 10px;
     height: 40px;
     line-height: 40px;
+  }
+  .back-btn {
+    float: right;
+    margin: 4px 0;
   }
 }
 </style>

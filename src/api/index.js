@@ -1,7 +1,12 @@
 const api = {
+  /** 用户相关 */
   loginApi: "/api/mrwy/login",
-  addUserApi: "/api/mrwy/user/add",
-  basicInfoQuery: "/api/mrwy/users/page/query",
+
+  /** 产妇相关 */
+  addMaternalApi: "/api/mrwy/user/add",
+  queryMaternalApi: "/api/mrwy/users/page/query",
+  deleteMaternalApi: "/api/mrwy/users/delete",
+
   Logout: "/auth/logout",
   ForgePassword: "/auth/forge-password",
   Register: "/auth/register",

@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Main from "@/views/Main";
+import MaternalMgr from "@/views/MaternalMgr";
 
 Vue.use(Router);
 
@@ -11,7 +12,19 @@ export default new Router({
     {
       path: "/",
       name: "home",
-      component: Main
+      redirect: "/index",
+      component: Main,
+      children: [
+        {
+          path: "index",
+          component: MaternalMgr
+        },
+        {
+          path: "survey",
+          component: () =>
+            import(/* webpackChunkName: "edit" */ "./views/Survey.vue")
+        }
+      ]
     },
     {
       path: "/login",
