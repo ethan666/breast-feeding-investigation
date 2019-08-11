@@ -20,6 +20,23 @@ export function addMaternalReq(parameter) {
 }
 
 /**
+ * 产妇基本信息编辑
+ * parameter: {
+ *     username: '',
+ *     password: '',
+ * }
+ * @param parameter
+ * @returns {*}
+ */
+export function editMaternalReq(parameter) {
+  return axios({
+    url: api.editMaternalApi,
+    method: "post",
+    data: parameter
+  });
+}
+
+/**
  * 删除产妇
  * parameter: {
  *     username: '',

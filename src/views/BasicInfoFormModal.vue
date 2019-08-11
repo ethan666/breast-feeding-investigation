@@ -109,9 +109,11 @@
 </template>
 
 <script>
-import { addMaternalReq } from "@/api/maternal";
+import { addMaternalReq, editMaternalReq } from "@/api/maternal";
 import moment from "moment";
 
+let mode; //0：增加模式，1：编辑模式
+let tRecord;
 export default {
   name: "BasicInfoFormModal",
   data() {
@@ -124,18 +126,42 @@ export default {
     };
   },
   methods: {
-    showModal() {
+    showModal(record) {
+      if (record) {
+        mode = 1;
+      } else {
+        mode = 0;
+      }
+      tRecord = record;
       this.visible = true;
+      this.$nextTick(() => {
+        this.form.resetFields();
+        if (mode === 1) {
+          const { userName, userId, age, inpatientArea, checkInTime } = record;
+          const values = {
+            userName,
+            userId,
+            age,
+            inpatientArea,
+            checkInTime: moment(new Date(checkInTime))
+          };
+          this.form.setFieldsValue(values);
+        }
+      });
     },
     okHandler() {
       this.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           values.checkInTime = values.checkInTime.valueOf();
-          const res = await addMaternalReq(values);
-          if (res.code === "200" && res.data === true) {
+          if (mode === 1) {
+            values.id = tRecord.id;
+          }
+          const req = mode === 0 ? addMaternalReq : editMaternalReq;
+          const res = await req(values);
+          if (res.code === "200") {
             this.visible = false;
             this.form.resetFields();
-            // this.$emit("ok");
+            this.$emit("ok");
           }
         }
       });

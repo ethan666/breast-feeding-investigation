@@ -20,9 +20,10 @@ export default new Router({
           component: MaternalMgr
         },
         {
-          path: "survey",
+          path: "survey/:userId",
           component: () =>
-            import(/* webpackChunkName: "edit" */ "./views/Survey.vue")
+            import(/* webpackChunkName: "edit" */ "./views/Survey.vue"),
+          props: true
         }
       ]
     },

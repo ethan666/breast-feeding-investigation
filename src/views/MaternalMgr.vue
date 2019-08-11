@@ -44,10 +44,10 @@
       :size="'small'"
       @change="handleTableChange"
     >
-      <span slot="action">
-        <a @click="editHandler">编辑</a>
+      <span slot="action" slot-scope="text, record">
+        <a @click="() => editHandler(record)">编辑</a>
         <a-divider type="vertical" />
-        <a @click="surveyHandler">调查</a>
+        <a @click="() => surveyHandler(record.userId)">调查</a>
         <a-divider type="vertical" />
         <a href="javascript:;">
           随访
@@ -185,14 +185,14 @@ export default {
     startAddBasicInfo() {
       this.$refs.basicInfoModalRef.showModal();
     },
+    editHandler(record) {
+      this.$refs.basicInfoModalRef.showModal(record);
+    },
     addMaternalInfoOk() {
       this.fetch();
     },
-    editHandler() {
-      // this.$router.push({ path: "survey" });
-    },
-    surveyHandler() {
-      this.$router.push({ path: "survey" });
+    surveyHandler(userId) {
+      this.$router.push({ path: `survey/${userId}` });
     }
   },
   components: {
