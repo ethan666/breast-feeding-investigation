@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <a-row class="action-line">
-      <a-col :span="16">
+      <a-col :span="20">
         <a-form layout="inline" :form="form">
           <a-form-item label="住院号">
             <a-input v-decorator="['userId']"></a-input>
@@ -10,10 +10,7 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox
-              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
-            >
-            </a-checkbox>
+            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
@@ -21,7 +18,7 @@
           </a-form-item>
           <!-- <a-form-item label="入院日期">
               <a-range-picker />
-            </a-form-item> -->
+          </a-form-item>-->
           <a-form-item>
             <a-button type="primary" @click="query">查询</a-button>
           </a-form-item>
@@ -30,8 +27,8 @@
           </a-form-item>
         </a-form>
       </a-col>
-      <a-col :span="8">
-        <a-button @click="startAddBasicInfo">添加</a-button>
+      <a-col :span="4">
+        <a-button type="primary" @click="startAddBasicInfo">添加</a-button>
       </a-col>
     </a-row>
     <a-table
@@ -49,9 +46,7 @@
         <a-divider type="vertical" />
         <a @click="() => surveyHandler(record.userId)">调查</a>
         <a-divider type="vertical" />
-        <a href="javascript:;">
-          随访
-        </a>
+        <a href="javascript:;">随访</a>
       </span>
     </a-table>
     <basic-info-form-modal ref="basicInfoModalRef" @ok="addMaternalInfoOk" />

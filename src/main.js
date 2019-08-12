@@ -18,6 +18,7 @@ import {
   Col,
   Modal,
   Table,
+  Radio,
   Checkbox,
   Divider,
   Icon,
@@ -38,6 +39,7 @@ Vue.use(Row);
 Vue.use(Col);
 Vue.use(Modal);
 Vue.use(Table);
+Vue.use(Radio);
 Vue.use(Checkbox);
 Vue.use(Icon);
 Vue.use(Divider);

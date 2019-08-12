@@ -17,17 +17,52 @@
             :key="item.questionId"
             :label="item.questionName"
           >
-            <component
-              :is="getInputComponent(item.questionType)"
-              v-decorator="[
-                item.questionId,
+            <!-- 问题类型(问题类型 0-板块 1-录入表 10-选择题(单选) 11-选择题（多选） 20-填空题 30-选择题答案 31-选择题之后的填空) -->
+            <a-radio-group
+              v-if="item.questionType === 10"
+              v-decorator="[item.questionId,
                 {
                   rules: [
-                    { required: true, message: `${item.questionName}必填！` }
+                    item.required && { required: true, message: `${item.questionName}必填！` }
                   ]
-                }
-              ]"
-            ></component>
+                }]"
+            >
+              <a-radio
+                v-for="optionItem in item.questionItemVOList"
+                :key="optionItem.questionItemId"
+                :value="optionItem.questionItemId"
+              >{{optionItem.questionItemName+"(分值:"+optionItem.score+")"}}</a-radio>
+            </a-radio-group>
+            <a-checkbox-group
+              v-else-if="item.questionType === 11"
+              v-decorator="[item.questionId,
+                {
+                  rules: [
+                    item.required && { required: true, message: `${item.questionName}必填！` }
+                  ]
+                }]"
+            >
+              <a-row>
+                <a-col
+                  v-for="optionItem in item.questionItemVOList"
+                  :key="optionItem.questionItemId"
+                  :span="8"
+                >
+                  <a-checkbox
+                    :value="optionItem.questionItemId"
+                  >{{optionItem.questionItemName+"(分值:"+optionItem.score+")"}}</a-checkbox>
+                </a-col>
+              </a-row>
+            </a-checkbox-group>
+            <a-input
+              v-else
+              v-decorator="[item.questionId,
+                {
+                  rules: [
+                    item.required && { required: true, message: `${item.questionName}必填！` }
+                  ]
+                }]"
+            ></a-input>
           </a-form-item>
         </a-form>
         <a-row>
@@ -44,8 +79,9 @@
 </template>
 
 <script>
-import { Input } from "ant-design-vue";
+import { Input, Radio } from "ant-design-vue";
 import { getQuestionnsReq } from "@/api/questions";
+import { queryMaternalReq } from "@/api/maternal";
 
 const questionTableIds = [
   ["T0", "A11", "A12", "A13", "A14", "A15"],
@@ -67,22 +103,18 @@ export default {
     return {
       basicInfo: {},
       form: this.$form.createForm(this),
-      labelCol: { span: 4 },
-      wrapperCol: { span: 8 },
+      labelCol: { span: 7 },
+      wrapperCol: { span: 12 },
       formItems: [],
       tableName: ""
     };
   },
   computed: {},
   mounted() {
+    this.getBasicInfo();
     this.fetch(questionTableIds[blockIndex][tableIndex]);
   },
   methods: {
-    //问题类型(问题类型 0-板块 1-录入表 10-选择题(单选) 11-选择题（多选） 20-填空题 30-选择题答案 31-选择题之后的填空)
-    getInputComponent(type) {
-      // return Input;
-      return Input;
-    },
     async fetch(questionnaireId) {
       const res = await getQuestionnsReq({
         questionnaireId,
@@ -94,6 +126,13 @@ export default {
       } else {
         this.formItems = [];
         this.tableName = "";
+      }
+    },
+    async getBasicInfo() {
+      const params = { userId: this.userId, limit: 100, offset: 0 };
+      const res = await queryMaternalReq(params);
+      if (res.code === "200" && res.data) {
+        this.basicInfo = res.data.users[0] || {};
       }
     }
   }
