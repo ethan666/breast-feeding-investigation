@@ -10,7 +10,9 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
+            <a-checkbox
+              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
+            ></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
@@ -27,7 +29,7 @@
           </a-form-item>
         </a-form>
       </a-col>
-      <a-col :span="4">
+      <a-col :span="4" class="add-btn">
         <a-button type="primary" @click="startAddBasicInfo">添加</a-button>
       </a-col>
     </a-row>
@@ -202,5 +204,8 @@ export default {
   .action-line {
     margin: 20px 0;
   }
+}
+.add-btn {
+  text-align: right;
 }
 </style>

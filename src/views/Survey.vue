@@ -9,6 +9,7 @@
         </a-card>
       </a-col>
       <a-col :span="20">
+        <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
           <a-form-item
             :labelCol="labelCol"
@@ -17,30 +18,46 @@
             :key="item.questionId"
             :label="item.questionName"
           >
-            <!-- 问题类型(问题类型 0-板块 1-录入表 10-选择题(单选) 11-选择题（多选） 20-填空题 30-选择题答案 31-选择题之后的填空) -->
+            <!-- 问题类型(10-选择题(单选) 11-选择题（多选） 20-填空题) -->
             <a-radio-group
               v-if="item.questionType === 10"
-              v-decorator="[item.questionId,
+              v-decorator="[
+                item.questionId,
                 {
                   rules: [
-                    item.required && { required: true, message: `${item.questionName}必填！` }
+                    {
+                      required: item.required,
+                      message: `${item.questionName}必填！`
+                    }
                   ]
-                }]"
+                }
+              ]"
             >
               <a-radio
                 v-for="optionItem in item.questionItemVOList"
                 :key="optionItem.questionItemId"
                 :value="optionItem.questionItemId"
-              >{{optionItem.questionItemName+"(分值:"+optionItem.score+")"}}</a-radio>
+                >{{
+                  optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
+                }}</a-radio
+              >
             </a-radio-group>
             <a-checkbox-group
               v-else-if="item.questionType === 11"
-              v-decorator="[item.questionId,
+              v-decorator="[
+                item.questionId,
                 {
                   rules: [
-                    item.required && { required: true, message: `${item.questionName}必填！` }
+                    {
+                      required: item.required,
+                      message: `${item.questionName}必填！`
+                    }
                   ]
-                }]"
+                }
+              ]"
             >
               <a-row>
                 <a-col
@@ -48,29 +65,66 @@
                   :key="optionItem.questionItemId"
                   :span="8"
                 >
-                  <a-checkbox
-                    :value="optionItem.questionItemId"
-                  >{{optionItem.questionItemName+"(分值:"+optionItem.score+")"}}</a-checkbox>
+                  <a-checkbox :value="optionItem.questionItemId">
+                    {{
+                      optionItem.questionItemName +
+                        "(分值:" +
+                        optionItem.score +
+                        ")"
+                    }}
+                  </a-checkbox>
                 </a-col>
               </a-row>
             </a-checkbox-group>
             <a-input
-              v-else
-              v-decorator="[item.questionId,
+              class="input-short"
+              v-else-if="item.questionType === 20 && item.suffix === undefined"
+              v-decorator="[
+                item.questionId,
                 {
                   rules: [
-                    item.required && { required: true, message: `${item.questionName}必填！` }
+                    {
+                      required: item.required,
+                      message: `${item.questionName}必填！`
+                    }
                   ]
-                }]"
-            ></a-input>
+                }
+              ]"
+            >
+            </a-input>
+            <a-input-number
+              v-else-if="item.questionType === 20 && item.suffix"
+              v-decorator="[
+                item.questionId,
+                {
+                  rules: [
+                    {
+                      required: item.required,
+                      message: `${item.questionName}必填！`
+                    }
+                  ]
+                }
+              ]"
+            />
+            <span class="ant-form-text" v-if="item.suffix">
+              {{ item.suffix }}
+            </span>
           </a-form-item>
         </a-form>
         <a-row>
-          <a-col class="btn" :span="6">
-            <a-button icon="save">暂存</a-button>
+          <a-col class="btn" :span="3" :offset="8">
+            <a-button icon="save" @click="saveHandler">暂存</a-button>
           </a-col>
-          <a-col class="btn" :span="6">
-            <a-button icon="right">下一页</a-button>
+          <a-col class="btn" :span="3">
+            <a-button
+              icon="right"
+              @click="
+                () => {
+                  saveHandler(true);
+                }
+              "
+              >下一页</a-button
+            >
           </a-col>
         </a-row>
       </a-col>
@@ -79,8 +133,7 @@
 </template>
 
 <script>
-import { Input, Radio } from "ant-design-vue";
-import { getQuestionnsReq } from "@/api/questions";
+import { getQuestionnsReq, saveQuestionnaireReq } from "@/api/questions";
 import { queryMaternalReq } from "@/api/maternal";
 
 const questionTableIds = [
@@ -134,13 +187,68 @@ export default {
       if (res.code === "200" && res.data) {
         this.basicInfo = res.data.users[0] || {};
       }
+    },
+    saveHandler(gotoNext = false) {
+      this.form.validateFieldsAndScroll(async (err, values) => {
+        if (!err) {
+          const askVOList = Object.keys(values)
+            .filter(key => values[key] !== undefined)
+            .map(key => {
+              const newItem = { questionId: key };
+              const temp = this.formItems.find(item => item.questionId === key);
+              if (temp) {
+                newItem.questionType = temp.questionType;
+              }
+              const { questionType } = newItem;
+              if (questionType === 10) {
+                // 单选题
+                newItem.questionItemIds = [values[key]];
+              }
+              if (questionType === 11) {
+                // 多选题
+                newItem.questionItemIds = values[key];
+              }
+              if (questionType === 20) {
+                newItem.issueResult = values[key];
+              }
+              return newItem;
+            });
+
+          const res = await saveQuestionnaireReq({
+            askVOList,
+            questionnaireId: questionTableIds[blockIndex][tableIndex],
+            userId: this.userId
+          });
+          if (res.code === "200" && gotoNext) {
+            //跳到下一题
+            tableIndex++;
+            if (tableIndex >= questionTableIds[blockIndex].length) {
+              tableIndex = 0;
+              blockIndex++;
+              if (blockIndex >= questionTableIds.length) {
+                // 问题回答完毕
+                blockIndex = 0;
+                return;
+              }
+            }
+            this.fetch(questionTableIds[blockIndex][tableIndex]);
+          }
+        }
+      });
     }
   }
 };
 </script>
 
 <style lang="less" scoped>
-.btn {
-  text-align: center;
+.survey {
+  margin-bottom: 200px;
+  .question-title {
+    font-size: 16px;
+    margin: 10px 20px 20px 20px;
+  }
+  .input-short {
+    width: 200px;
+  }
 }
 </style>
