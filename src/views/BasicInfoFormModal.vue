@@ -43,10 +43,12 @@
             { rules: [{ required: true, message: '所在病区必填！' }] }
           ]"
         >
-          <a-select-option value="1">产科Ⅰ病区</a-select-option>
-          <a-select-option value="2">产科Ⅱ病区</a-select-option>
-          <a-select-option value="3">产科Ⅲ病区</a-select-option>
-          <a-select-option value="4">产科Ⅳ病区</a-select-option>
+          <a-select-option
+            v-for="item in dicts.inpatientArea"
+            :key="item.value"
+            :value="item.value"
+            >{{ item.title }}</a-select-option
+          >
         </a-select>
       </a-form-item>
       <a-form-item
@@ -110,6 +112,7 @@
 
 <script>
 import { addMaternalReq, editMaternalReq } from "@/api/maternal";
+import dicts from "@/config/dicts";
 import moment from "moment";
 
 let mode; //0：增加模式，1：编辑模式
@@ -122,7 +125,8 @@ export default {
       labelCol: { span: 4 },
       wrapperCol: { span: 8 },
       visible: false,
-      moment
+      moment,
+      dicts
     };
   },
   methods: {

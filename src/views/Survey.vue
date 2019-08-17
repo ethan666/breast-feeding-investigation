@@ -24,6 +24,9 @@
               v-decorator="[
                 item.questionId,
                 {
+                  initialValue: item.askVO
+                    ? item.askVO.questionItemIds[0]
+                    : undefined,
                   rules: [
                     {
                       required: item.required,
@@ -50,6 +53,9 @@
               v-decorator="[
                 item.questionId,
                 {
+                  initialValue: item.askVO
+                    ? item.askVO.questionItemIds
+                    : undefined,
                   rules: [
                     {
                       required: item.required,
@@ -83,7 +89,12 @@
                 item.questionType === 20 && item.questionId.includes('SUM')
               "
               read-only
-              v-decorator="[item.questionId]"
+              v-decorator="[
+                item.questionId,
+                {
+                  initialValue: item.askVO ? item.askVO.issueResult : undefined
+                }
+              ]"
             />
             <a-input
               class="input-short"
@@ -91,6 +102,7 @@
               v-decorator="[
                 item.questionId,
                 {
+                  initialValue: item.askVO ? item.askVO.issueResult : undefined,
                   rules: [
                     {
                       required: item.required,
@@ -105,6 +117,7 @@
               v-decorator="[
                 item.questionId,
                 {
+                  initialValue: item.askVO ? item.askVO.issueResult : undefined,
                   rules: [
                     {
                       required: item.required,

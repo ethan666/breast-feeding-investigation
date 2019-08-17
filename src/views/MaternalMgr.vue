@@ -47,8 +47,10 @@
         <a @click="() => editHandler(record)">编辑</a>
         <a-divider type="vertical" />
         <a @click="() => surveyHandler(record.userId)">调查</a>
+        <!-- <a-divider type="vertical" />
+        <a href="javascript:;">随访</a> -->
         <a-divider type="vertical" />
-        <a href="javascript:;">随访</a>
+        <a @click="() => deleteHandler(record.id)">删除</a>
       </span>
     </a-table>
     <basic-info-form-modal ref="basicInfoModalRef" @ok="addMaternalInfoOk" />
@@ -59,6 +61,7 @@
 import BasicInfoFormModal from "@/views/BasicInfoFormModal";
 import { deleteMaternalReq, queryMaternalReq } from "@/api/maternal";
 import { timeFtt } from "@/utils/time";
+import { getDictTitleByValue } from "@/utils/dictUtil";
 
 const columns = [
   {
@@ -83,7 +86,8 @@ const columns = [
     title: "所在病区",
     dataIndex: "inpatientArea",
     align: "center",
-    width: "10%"
+    width: "10%",
+    customRender: text => getDictTitleByValue(text, "inpatientArea")
   },
   {
     title: "入组时间",
@@ -108,7 +112,6 @@ const columns = [
     title: "婚姻状况",
     dataIndex: "married",
     align: "center"
-    // width: "10%"
   },
   {
     title: "操作",
@@ -128,7 +131,7 @@ export default {
       columns,
       loading: false,
       pagination: {
-        pageSize: 4,
+        pageSize: 15,
         total: 0,
         current: 1
       },
@@ -190,6 +193,13 @@ export default {
     },
     surveyHandler(userId) {
       this.$router.push({ path: `survey/${userId}` });
+    },
+    async deleteHandler(id) {
+      const res = await deleteMaternalReq({ id });
+      if (res.code === "200") {
+        // 删除后，刷新列表
+        this.fetch();
+      }
     }
   },
   components: {

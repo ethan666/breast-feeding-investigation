@@ -2,7 +2,11 @@
   <div class="head">
     <div class="title">母乳喂养调查</div>
     <div class="time">{{ currentTime }}</div>
-    <a-button class="back-btn" type="primary" @click="backHome"
+    <a-button
+      v-if="backHomeBtnVisible"
+      class="back-btn"
+      type="primary"
+      @click="backHome"
       >返回首页</a-button
     >
   </div>
@@ -13,16 +17,29 @@ import { dateFtt } from "@/utils/time";
 
 export default {
   data() {
-    return {};
+    return {
+      backHomeBtnVisible: false
+    };
   },
   computed: {
     currentTime() {
       return dateFtt(new Date(), "yyyy-MM-dd");
     }
   },
+  mounted() {
+    this.updateVisible();
+  },
   methods: {
     backHome() {
       this.$router.push({ name: "home" });
+    },
+    updateVisible() {
+      this.backHomeBtnVisible = this.$route.path.includes("/survey/");
+    }
+  },
+  watch: {
+    $route() {
+      this.updateVisible();
     }
   }
 };
