@@ -76,6 +76,15 @@
                 </a-col>
               </a-row>
             </a-checkbox-group>
+            <!-- 总分 -->
+            <a-input
+              class="input-short"
+              v-else-if="
+                item.questionType === 20 && item.questionId.includes('SUM')
+              "
+              read-only
+              v-decorator="[item.questionId]"
+            />
             <a-input
               class="input-short"
               v-else-if="item.questionType === 20 && item.suffix === undefined"
@@ -90,8 +99,7 @@
                   ]
                 }
               ]"
-            >
-            </a-input>
+            />
             <a-input-number
               v-else-if="item.questionType === 20 && item.suffix"
               v-decorator="[
@@ -113,10 +121,13 @@
         </a-form>
         <a-row>
           <a-col class="btn" :span="3" :offset="8">
-            <a-button icon="save" @click="saveHandler">暂存</a-button>
+            <a-button type="primary" icon="save" @click="saveHandler">
+              暂存
+            </a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
+              type="primary"
               icon="right"
               @click="
                 () => {
@@ -155,7 +166,6 @@ export default {
   data() {
     return {
       basicInfo: {},
-      form: this.$form.createForm(this),
       labelCol: { span: 7 },
       wrapperCol: { span: 12 },
       formItems: [],
@@ -163,6 +173,44 @@ export default {
     };
   },
   computed: {},
+  beforeCreate() {
+    const _this = this;
+    this.form = this.$form.createForm(this, {
+      onValuesChange: (props, values) => {
+        const total = this.formItems.find(item =>
+          item.questionId.includes("SUM")
+        );
+        if (total && values[total.questionId] === undefined) {
+          // 判断其他都填有值
+          const obj = Object.assign({}, props.getFieldsValue(), values);
+          delete obj[total.questionId];
+          const undefinedItem = Object.keys(obj).find(
+            key => obj[key] === undefined
+          );
+          if (!undefinedItem) {
+            // 计算总分
+            let score = 0;
+            Object.keys(obj).forEach(key => {
+              const tItem = _this.formItems.find(
+                item => item.questionId === key
+              );
+              if (tItem) {
+                const optionItem = tItem.questionItemVOList.find(
+                  item => item.questionItemId === obj[key]
+                );
+                if (optionItem) {
+                  score += optionItem.score;
+                }
+              }
+            });
+            const result = {};
+            result[total.questionId] = score;
+            props.setFieldsValue(result);
+          }
+        }
+      }
+    });
+  },
   mounted() {
     this.getBasicInfo();
     this.fetch(questionTableIds[blockIndex][tableIndex]);
@@ -220,7 +268,7 @@ export default {
             userId: this.userId
           });
           if (res.code === "200" && gotoNext) {
-            //跳到下一题
+            //跳到下一个调查表
             tableIndex++;
             if (tableIndex >= questionTableIds[blockIndex].length) {
               tableIndex = 0;
