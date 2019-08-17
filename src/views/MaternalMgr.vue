@@ -194,12 +194,18 @@ export default {
     surveyHandler(userId) {
       this.$router.push({ path: `survey/${userId}` });
     },
-    async deleteHandler(id) {
-      const res = await deleteMaternalReq({ id });
-      if (res.code === "200") {
-        // 删除后，刷新列表
-        this.fetch();
-      }
+    deleteHandler(id) {
+      const _this = this;
+      this.$confirm({
+        title: "确定删除吗?",
+        async onOk() {
+          const res = await deleteMaternalReq({ id });
+          if (res.code === "200") {
+            // 删除后，刷新列表
+            _this.fetch();
+          }
+        }
+      });
     }
   },
   components: {

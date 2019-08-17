@@ -47,9 +47,8 @@ export function editMaternalReq(parameter) {
  */
 export function deleteMaternalReq(parameter) {
   return axios({
-    url: api.deleteMaternalApi,
-    method: "post",
-    data: parameter
+    url: `${api.deleteMaternalApi}?${qs.stringify(parameter)}`,
+    method: "post"
   });
 }
 

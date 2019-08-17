@@ -47,6 +47,7 @@ Vue.use(DatePicker);
 Vue.use(notification);
 
 Vue.prototype.$notification = notification;
+Vue.prototype.$confirm = Modal.confirm;
 
 Vue.config.productionTip = false;
 

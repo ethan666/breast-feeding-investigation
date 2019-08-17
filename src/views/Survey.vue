@@ -40,13 +40,14 @@
                 v-for="optionItem in item.questionItemVOList"
                 :key="optionItem.questionItemId"
                 :value="optionItem.questionItemId"
-                >{{
+              >
+                {{
                   optionItem.questionItemName +
                     "(分值:" +
                     optionItem.score +
                     ")"
-                }}</a-radio
-              >
+                }}
+              </a-radio>
             </a-radio-group>
             <a-checkbox-group
               v-else-if="item.questionType === 11"
