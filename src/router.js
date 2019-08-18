@@ -10,9 +10,9 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
+      path: "/front/",
       name: "home",
-      redirect: "/index",
+      redirect: "front/index",
       component: Main,
       children: [
         {
@@ -28,7 +28,7 @@ export default new Router({
       ]
     },
     {
-      path: "/login",
+      path: "/front/login",
       name: "login",
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -37,7 +37,7 @@ export default new Router({
         import(/* webpackChunkName: "login" */ "./views/Login.vue")
     },
     {
-      path: "/404",
+      path: "/front/404",
       component: () =>
         import(/* webpackChunkName: "fail" */ "@/views/exception/404")
     },
