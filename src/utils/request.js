@@ -1,6 +1,4 @@
-import Vue from "vue";
 import axios from "axios";
-import store from "@/store/index";
 import router from "@/router";
 import { VueAxios } from "./axios";
 import notification from "ant-design-vue/es/notification";
@@ -17,7 +15,7 @@ const err = error => {
     if (response.status === 404) {
       notification.warning({
         message: "404 Not Found",
-        description: response.message
+        description: data.message
       });
     }
   }
@@ -35,34 +33,38 @@ const err = error => {
 
 // response interceptor
 service.interceptors.response.use(response => {
-  if (response.code === 400) {
-    notification.warning({
-      message: "参数错误",
-      description: response.message
-    });
-  } else if (response.code === 401) {
-    notification.warning({
-      message: "登陆帐号密码错误",
-      description: response.message
-    });
-  } else if (response.code === 500) {
-    notification.warning({
-      message: "系统异常",
-      description: response.message
-    });
-  } else if (response.code === 301) {
-    router.push({ name: "login" });
-    notification.info({
-      message: "请重新登录",
-      description: response.message
-    });
-  } else if (response.code === 200) {
-    notification.info({
-      message: "提示",
-      description: response.message
-    });
+  if (response.status === 200) {
+    const { data } = response;
+    const { code } = data;
+    if (code === "400") {
+      notification.warning({
+        message: "参数错误",
+        description: data.message
+      });
+    } else if (code === "401") {
+      notification.warning({
+        message: "登陆帐号密码错误",
+        description: data.message
+      });
+    } else if (code === "500") {
+      notification.warning({
+        message: "系统异常",
+        description: data.message
+      });
+    } else if (code === "301") {
+      router.push({ name: "login" });
+      notification.info({
+        message: "请重新登录",
+        description: data.message
+      });
+    } else if (code === "200") {
+      notification.info({
+        message: "提示",
+        description: data.message
+      });
+    }
+    return response.data;
   }
-  return response.data;
 }, err);
 
 const installer = {
