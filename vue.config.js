@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "/front/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/front/" : "/front/",
   // chainWebpack: config => {
   //   config.resolve.alias
   //     .set("@$", resolve("src"))
