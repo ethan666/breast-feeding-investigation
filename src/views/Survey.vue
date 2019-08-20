@@ -105,7 +105,7 @@
                 item.questionId,
                 {
                   initialValue: item.askVO
-                    ? moment(new Date(item.askVO.issueResult))
+                    ? moment(new Date(Number(item.askVO.issueResult)))
                     : undefined
                 }
               ]"
@@ -119,7 +119,7 @@
                 item.questionId,
                 {
                   initialValue: item.askVO
-                    ? moment(new Date(item.askVO.issueResult))
+                    ? moment(new Date(Number(item.askVO.issueResult)))
                     : undefined
                 }
               ]"
