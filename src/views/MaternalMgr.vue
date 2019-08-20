@@ -10,7 +10,9 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
+            <a-checkbox
+              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
+            ></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
