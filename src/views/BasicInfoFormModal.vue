@@ -19,7 +19,10 @@
         <a-input
           v-decorator="[
             'userId',
-            { rules: [{ required: true, message: '住院号必填！' }] }
+            { rules: [
+              { required: true, message: '住院号必填！' }, 
+              { pattern: /^[0-9]*$/, message: '请输入数字！'}
+            ] }
           ]"
         />
       </a-form-item>
@@ -32,11 +35,7 @@
           ]"
         />
       </a-form-item>
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label="所在病区"
-      >
+      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所在病区">
         <a-select
           v-decorator="[
             'inpatientArea',
@@ -47,15 +46,10 @@
             v-for="item in dicts.inpatientArea"
             :key="item.value"
             :value="item.value"
-            >{{ item.title }}</a-select-option
-          >
+          >{{ item.title }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label="入组时间"
-      >
+      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="入组时间">
         <a-date-picker
           v-decorator="[
             'checkInTime',

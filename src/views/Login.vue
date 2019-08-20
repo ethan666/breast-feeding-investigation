@@ -24,9 +24,7 @@
       </a-input>
     </a-form-item>
     <a-form-item>
-      <a-button type="primary" html-type="submit" class="login-form-button"
-        >登录</a-button
-      >
+      <a-button type="primary" html-type="submit" class="login-form-button">登录</a-button>
     </a-form-item>
   </a-form>
 </template>
@@ -43,13 +41,7 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         if (!err) {
-          this.Login(values)
-            .then(this.loginSuccess)
-            .catch(this.requestFailed)
-            .finally(() => {
-              // state.loginBtn = false;
-              console.log("login finally!");
-            });
+          this.Login(values).then(this.loginSuccess);
         }
       });
     },

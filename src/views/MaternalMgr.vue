@@ -10,9 +10,7 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox
-              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
-            ></a-checkbox>
+            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
@@ -48,7 +46,7 @@
         <a-divider type="vertical" />
         <a @click="() => surveyHandler(record.userId)">调查</a>
         <!-- <a-divider type="vertical" />
-        <a href="javascript:;">随访</a> -->
+        <a href="javascript:;">随访</a>-->
         <a-divider type="vertical" />
         <a @click="() => deleteHandler(record.id)">删除</a>
       </span>

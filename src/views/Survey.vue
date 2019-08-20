@@ -9,6 +9,7 @@
         </a-card>
       </a-col>
       <a-col :span="20">
+        <a-row></a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
           <a-form-item
@@ -42,10 +43,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                  optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                optionItem.questionItemName +
+                "(分值:" +
+                optionItem.score +
+                ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -74,15 +75,39 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                      optionItem.questionItemName +
-                        "(分值:" +
-                        optionItem.score +
-                        ")"
+                    optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                     }}
                   </a-checkbox>
                 </a-col>
               </a-row>
             </a-checkbox-group>
+            <!-- 日期输入控件 -->
+            <a-date-picker
+              v-else-if="
+                item.questionType === 20 && item.buttonType==='DATE'
+              "
+              v-decorator="[
+                item.questionId,
+                {
+                  initialValue: item.askVO ? moment(new Date(item.askVO.issueResult)) : undefined
+                }
+              ]"
+            />
+            <a-date-picker
+              v-else-if="
+                item.questionType === 20 && item.buttonType==='DATETIME'
+              "
+              showTime
+              v-decorator="[
+                item.questionId,
+                {
+                  initialValue: item.askVO ? moment(new Date(item.askVO.issueResult)) : undefined
+                }
+              ]"
+            />
             <!-- 总分 -->
             <a-input
               class="input-short"
@@ -128,16 +153,12 @@
                 }
               ]"
             />
-            <span class="ant-form-text" v-if="item.suffix">
-              {{ item.suffix }}
-            </span>
+            <span class="ant-form-text" v-if="item.suffix">{{ item.suffix }}</span>
           </a-form-item>
         </a-form>
         <a-row>
           <a-col class="btn" :span="3" :offset="8">
-            <a-button type="primary" icon="save" @click="saveHandler">
-              暂存
-            </a-button>
+            <a-button type="primary" icon="save" @click="saveHandler">暂存</a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -148,8 +169,7 @@
                   saveHandler(true);
                 }
               "
-              >下一页</a-button
-            >
+            >下一页</a-button>
           </a-col>
         </a-row>
       </a-col>
@@ -160,6 +180,7 @@
 <script>
 import { getQuestionnsReq, saveQuestionnaireReq } from "@/api/questions";
 import { queryMaternalReq } from "@/api/maternal";
+import moment from "moment";
 
 const questionTableIds = [
   ["T0", "A11", "A12", "A13", "A14", "A15"],
@@ -183,7 +204,8 @@ export default {
       labelCol: { span: 7 },
       wrapperCol: { span: 12 },
       formItems: [],
-      tableName: ""
+      tableName: "",
+      moment
     };
   },
   computed: {},
@@ -260,18 +282,21 @@ export default {
               const temp = this.formItems.find(item => item.questionId === key);
               if (temp) {
                 newItem.questionType = temp.questionType;
+                newItem.buttonType = temp.buttonType;
               }
-              const { questionType } = newItem;
+              const { questionType, buttonType } = newItem;
               if (questionType === 10) {
                 // 单选题
                 newItem.questionItemIds = [values[key]];
-              }
-              if (questionType === 11) {
+              } else if (questionType === 11) {
                 // 多选题
                 newItem.questionItemIds = values[key];
-              }
-              if (questionType === 20) {
-                newItem.issueResult = values[key];
+              } else if (questionType === 20) {
+                if (buttonType === "DATE" || buttonType === "DATETIME") {
+                  newItem.issueResult = values[key].valueOf();
+                } else {
+                  newItem.issueResult = values[key];
+                }
               }
               return newItem;
             });
