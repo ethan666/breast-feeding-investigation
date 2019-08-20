@@ -284,6 +284,7 @@ export default {
     });
   },
   mounted() {
+    tableIndex = 0;
     this.getBasicInfo();
     this.fetch(this.questionTableIdsOneD[tableIndex]);
   },
