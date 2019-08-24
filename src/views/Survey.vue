@@ -14,14 +14,13 @@
             v-for="(item, index) in questionTableIdsOneD"
             :key="index"
             class="table-btn"
+            :title="titles[index]"
             @click="
               () => {
                 gotoQuestionTable(item, index);
               }
             "
-          >
-            {{ item }}
-          </a-button>
+          >{{ item }}</a-button>
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
@@ -57,10 +56,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                  optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                optionItem.questionItemName +
+                "(分值:" +
+                optionItem.score +
+                ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -89,10 +88,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                      optionItem.questionItemName +
-                        "(分值:" +
-                        optionItem.score +
-                        ")"
+                    optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -115,6 +114,7 @@
                 item.questionType === 20 && item.buttonType === 'DATETIME'
               "
               showTime
+              format="YYYY-MM-DD HH:mm:ss"
               v-decorator="[
                 item.questionId,
                 {
@@ -169,16 +169,16 @@
                 }
               ]"
             />
-            <span class="ant-form-text" v-if="item.suffix">{{
+            <span class="ant-form-text" v-if="item.suffix">
+              {{
               item.suffix
-            }}</span>
+              }}
+            </span>
           </a-form-item>
         </a-form>
         <a-row>
           <a-col class="btn" :span="3" :offset="8">
-            <a-button type="primary" icon="save" @click="saveHandler"
-              >暂存</a-button
-            >
+            <a-button type="primary" icon="save" @click="saveHandler">暂存</a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -189,8 +189,7 @@
                   saveHandler(true);
                 }
               "
-              >下一页</a-button
-            >
+            >下一页</a-button>
           </a-col>
         </a-row>
       </a-col>
@@ -226,6 +225,29 @@ export default {
       wrapperCol: { span: 12 },
       formItems: [],
       tableName: "",
+      titles: [
+        "产前基本信息表",
+        "IOWA婴儿喂养态度量表",
+        "母乳喂养自信心量表BSES",
+        "焦虑量表",
+        "爱丁堡产后抑郁量表EPDS",
+        "调查表2-中文版母乳喂养自信心量表（调查对象：患者配偶）",
+        "产后第一板块基本信息",
+        "客观泌乳量评价",
+        "术后疼痛情况",
+        "剖宫术后第二板块C基本信息",
+        "爱丁堡产后抑郁量表EPDS",
+        "IOWA婴儿喂养态度量表",
+        "母乳喂养自信心量表BSES",
+        "IOWA婴儿喂养态度量表",
+        "母乳喂养测量工具BAT",
+        "产后第三板块D",
+        "舌系带功能评估",
+        "术后第四板块E",
+        "随访板块G",
+        "纯母乳喂养家人支持程度问卷",
+        "随访板块G"
+      ],
       questionnaireId: "",
       deliveyWay: 0, //表单中某一项是否需要展示
       moment
