@@ -14,13 +14,15 @@
             v-for="(item, index) in questionTableIdsOneD"
             :key="index"
             class="table-btn"
+            :class="{ 'selected-btn': index === tableIndex }"
             :title="titles[index]"
             @click="
               () => {
                 gotoQuestionTable(item, index);
               }
             "
-          >{{ item }}</a-button>
+            >{{ item }}</a-button
+          >
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
@@ -56,10 +58,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                optionItem.questionItemName +
-                "(分值:" +
-                optionItem.score +
-                ")"
+                  optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -88,10 +90,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                    optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                      optionItem.questionItemName +
+                        "(分值:" +
+                        optionItem.score +
+                        ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -170,18 +172,26 @@
               ]"
             />
             <span class="ant-form-text" v-if="item.suffix">
-              {{
-              item.suffix
-              }}
+              {{ item.suffix }}
             </span>
           </a-form-item>
         </a-form>
         <a-row>
           <a-col class="btn" :span="3" :offset="8">
-            <a-button type="primary" icon="save" @click="saveHandler">暂存</a-button>
+            <a-button
+              type="primary"
+              icon="save"
+              @click="
+                () => {
+                  saveHandler(false);
+                }
+              "
+              >暂存</a-button
+            >
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
+              v-if="tableIndex !== questionTableIdsOneD.length - 1"
               type="primary"
               icon="right"
               @click="
@@ -189,7 +199,8 @@
                   saveHandler(true);
                 }
               "
-            >下一页</a-button>
+              >下一页</a-button
+            >
           </a-col>
         </a-row>
       </a-col>
@@ -213,7 +224,7 @@ const questionTableIds = [
 ];
 
 // let blockIndex = 0;
-let tableIndex = 0;
+// let tableIndex = 0;
 
 export default {
   name: "Survey",
@@ -250,7 +261,8 @@ export default {
       ],
       questionnaireId: "",
       deliveyWay: 0, //表单中某一项是否需要展示
-      moment
+      moment,
+      tableIndex: 0
     };
   },
   computed: {
@@ -306,9 +318,9 @@ export default {
     });
   },
   mounted() {
-    tableIndex = 0;
+    // tableIndex = 0;
     this.getBasicInfo();
-    this.fetch(this.questionTableIdsOneD[tableIndex]);
+    this.fetch(this.questionTableIdsOneD[this.tableIndex]);
   },
   methods: {
     reset() {
@@ -368,8 +380,13 @@ export default {
                 // 多选题
                 newItem.questionItemIds = values[key];
               } else if (questionType === 20) {
-                if (buttonType === "DATE" || buttonType === "DATETIME") {
+                if (buttonType === "DATETIME") {
                   newItem.issueResult = values[key].valueOf();
+                } else if (buttonType === "DATE") {
+                  const time = values[key].valueOf();
+                  const date = new Date(time);
+
+                  newItem.issueResult = date.setHours(0, 0, 0, 0);
                 } else {
                   newItem.issueResult = values[key];
                 }
@@ -379,14 +396,14 @@ export default {
 
           const res = await saveQuestionnaireReq({
             askVOList,
-            questionnaireId: this.questionTableIdsOneD[tableIndex],
+            questionnaireId: this.questionTableIdsOneD[this.tableIndex],
             userId: this.userId
           });
           if (res.code === "200" && gotoNext) {
             //跳到下一个调查表
-            tableIndex++;
-            if (tableIndex >= this.questionTableIdsOneD.length) {
-              tableIndex = 0;
+            this.tableIndex++;
+            if (this.tableIndex >= this.questionTableIdsOneD.length) {
+              this.tableIndex = 0;
               return;
             }
             // if (tableIndex >= questionTableIds[blockIndex].length) {
@@ -398,13 +415,13 @@ export default {
             //     return;
             //   }
             // }
-            this.fetch(this.questionTableIdsOneD[tableIndex]);
+            this.fetch(this.questionTableIdsOneD[this.tableIndex]);
           }
         }
       });
     },
     gotoQuestionTable(questionnaireId, index) {
-      tableIndex = index;
+      this.tableIndex = index;
       this.fetch(questionnaireId);
     },
     showFormItem(deliveyWay) {
@@ -426,6 +443,11 @@ export default {
   }
   .table-btn {
     margin: 8px;
+  }
+  .selected-btn {
+    color: #40a9ff;
+    background-color: #fff;
+    border-color: #40a9ff;
   }
 }
 </style>

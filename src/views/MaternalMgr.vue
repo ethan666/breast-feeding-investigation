@@ -106,12 +106,14 @@ const columns = [
     title: "教育程度",
     dataIndex: "education",
     align: "center",
-    width: "10%"
+    width: "10%",
+    customRender: text => getDictTitleByValue(text, "educationLevels")
   },
   {
     title: "婚姻状况",
     dataIndex: "married",
-    align: "center"
+    align: "center",
+    customRender: text => getDictTitleByValue(text, "maritalStatus")
   },
   {
     title: "操作",
