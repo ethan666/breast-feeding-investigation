@@ -21,8 +21,7 @@
                 gotoQuestionTable(item, index);
               }
             "
-            >{{ item }}</a-button
-          >
+          >{{ item }}</a-button>
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
@@ -58,10 +57,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                  optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                optionItem.questionItemName +
+                "(分值:" +
+                optionItem.score +
+                ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -90,10 +89,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                      optionItem.questionItemName +
-                        "(分值:" +
-                        optionItem.score +
-                        ")"
+                    optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -171,9 +170,7 @@
                 }
               ]"
             />
-            <span class="ant-form-text" v-if="item.suffix">
-              {{ item.suffix }}
-            </span>
+            <span class="ant-form-text" v-if="item.suffix">{{ item.suffix }}</span>
           </a-form-item>
         </a-form>
         <a-row>
@@ -186,8 +183,7 @@
                   saveHandler(false);
                 }
               "
-              >暂存</a-button
-            >
+            >暂存</a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -199,8 +195,7 @@
                   saveHandler(true);
                 }
               "
-              >下一页</a-button
-            >
+            >下一页</a-button>
           </a-col>
         </a-row>
       </a-col>
@@ -212,6 +207,7 @@
 import { getQuestionnsReq, saveQuestionnaireReq } from "@/api/questions";
 import { queryMaternalReq } from "@/api/maternal";
 import moment from "moment";
+import notification from "ant-design-vue/es/notification";
 
 const questionTableIds = [
   ["T0", "A11", "A12", "A13", "A14", "A15"],
@@ -336,6 +332,17 @@ export default {
         this.formItems = res.data.questionVOList;
         this.tableName = res.data.questionnaireName;
         this.questionnaireId = res.data.questionnaireId;
+
+        if (this.questionnaireId === "b11_2") {
+          if (res.data.mode === undefined) {
+            notification.info({
+              message: "提示",
+              description: "还没有填写“是顺产还是剖腹产”！"
+            });
+          } else {
+            this.deliveyWay = res.data.mode;
+          }
+        }
 
         // 判断剖腹产初始值
         this.formItems.forEach(item => {
