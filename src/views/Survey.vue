@@ -334,7 +334,7 @@ export default {
         this.questionnaireId = res.data.questionnaireId;
 
         if (this.questionnaireId === "b11_2") {
-          if (res.data.mode === undefined) {
+          if (!res.data.mode) {
             notification.info({
               message: "提示",
               description: "还没有填写“是顺产还是剖腹产”！"
