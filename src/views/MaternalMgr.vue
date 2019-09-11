@@ -10,13 +10,11 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox
-              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
-            ></a-checkbox>
+            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
-            <a-date-picker v-decorator="['postpartum3day', {}]" />
+            <a-date-picker v-decorator="['postpartum3day']" />
           </a-form-item>
           <!-- <a-form-item label="入院日期">
               <a-range-picker />
@@ -167,7 +165,10 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (values.postpartum3day) {
-            values.postpartum3day = values.postpartum3day.valueOf();
+            const time = values.postpartum3day.valueOf();
+            const date = new Date(time);
+
+            values.postpartum3day = date.setHours(0, 0, 0, 0);
           }
           Object.keys(values).forEach(key => {
             if (values[key] === undefined) {

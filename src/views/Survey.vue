@@ -219,6 +219,8 @@ const questionTableIds = [
   ["G0"]
 ];
 
+const modeIds = ['b11_2', 'D0', 'E0', 'F0']
+
 // let blockIndex = 0;
 // let tableIndex = 0;
 
@@ -333,7 +335,7 @@ export default {
         this.tableName = res.data.questionnaireName;
         this.questionnaireId = res.data.questionnaireId;
 
-        if (this.questionnaireId === "b11_2") {
+        if (modeIds.indexOf(this.questionnaireId) !== -1) {
           if (!res.data.mode) {
             notification.info({
               message: "提示",
