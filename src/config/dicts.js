@@ -16,7 +16,8 @@ const dicts = {
     { title: "已婚", value: 2 },
     { title: "离异", value: 3 },
     { title: "丧偶", value: 4 }
-  ]
+  ],
+  deliveryModes: [{ title: "顺产", value: 1 }, { title: "剖宫产", value: 2 }]
 };
 
 export default dicts;

@@ -6,6 +6,8 @@
           <p>姓名：{{ basicInfo.userName }}</p>
           <p>年龄：{{ basicInfo.age }}</p>
           <p>住院号：{{ basicInfo.userId }}</p>
+          <p>电话号码：{{ basicInfo.phone }}</p>
+          <p>分娩方式：{{ deliveyMode }}</p>
         </a-card>
       </a-col>
       <a-col :span="20">
@@ -21,7 +23,8 @@
                 gotoQuestionTable(item, index);
               }
             "
-          >{{ item }}</a-button>
+            >{{ item }}</a-button
+          >
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
@@ -57,10 +60,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                optionItem.questionItemName +
-                "(分值:" +
-                optionItem.score +
-                ")"
+                  optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -89,10 +92,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                    optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                      optionItem.questionItemName +
+                        "(分值:" +
+                        optionItem.score +
+                        ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -170,7 +173,9 @@
                 }
               ]"
             />
-            <span class="ant-form-text" v-if="item.suffix">{{ item.suffix }}</span>
+            <span class="ant-form-text" v-if="item.suffix">{{
+              item.suffix
+            }}</span>
           </a-form-item>
         </a-form>
         <a-row>
@@ -183,19 +188,34 @@
                   saveHandler(false);
                 }
               "
-            >暂存</a-button>
+              >暂存</a-button
+            >
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
-              v-if="tableIndex !== questionTableIdsOneD.length - 1"
+              :disabled="tableIndex === 0"
+              type="primary"
+              icon="left"
+              @click="
+                () => {
+                  saveHandler(-1);
+                }
+              "
+              >上一页</a-button
+            >
+          </a-col>
+          <a-col class="btn" :span="3">
+            <a-button
+              :disabled="tableIndex === questionTableIdsOneD.length - 1"
               type="primary"
               icon="right"
               @click="
                 () => {
-                  saveHandler(true);
+                  saveHandler(1);
                 }
               "
-            >下一页</a-button>
+              >下一页</a-button
+            >
           </a-col>
         </a-row>
       </a-col>
@@ -208,6 +228,7 @@ import { getQuestionnsReq, saveQuestionnaireReq } from "@/api/questions";
 import { queryMaternalReq } from "@/api/maternal";
 import moment from "moment";
 import notification from "ant-design-vue/es/notification";
+import { getDictTitleByValue } from "@/utils/dictUtil";
 
 const questionTableIds = [
   ["T0", "A11", "A12", "A13", "A14", "A15"],
@@ -219,7 +240,7 @@ const questionTableIds = [
   ["G0"]
 ];
 
-const modeIds = ['b11_2', 'D0', 'E0', 'F0']
+const modeIds = ["b11_2", "D0", "E0", "F0"];
 
 // let blockIndex = 0;
 // let tableIndex = 0;
@@ -266,6 +287,9 @@ export default {
   computed: {
     questionTableIdsOneD() {
       return [].concat.apply([], questionTableIds);
+    },
+    deliveyMode() {
+      return getDictTitleByValue(this.basicInfo.deliveryWay, "deliveryModes");
     }
   },
   beforeCreate() {
@@ -369,7 +393,7 @@ export default {
         this.basicInfo = res.data.users[0] || {};
       }
     },
-    saveHandler(gotoNext = false) {
+    saveHandler(direction) {
       this.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           const askVOList = Object.keys(values)
@@ -408,22 +432,20 @@ export default {
             questionnaireId: this.questionTableIdsOneD[this.tableIndex],
             userId: this.userId
           });
-          if (res.code === "200" && gotoNext) {
-            //跳到下一个调查表
-            this.tableIndex++;
-            if (this.tableIndex >= this.questionTableIdsOneD.length) {
-              this.tableIndex = 0;
+          if (res.code === "200") {
+            if (direction === 1) {
+              //跳到下一个调查表
+              this.tableIndex++;
+              // if (this.tableIndex >= this.questionTableIdsOneD.length) {
+              //   this.tableIndex = 0;
+              //   return;
+              // }
+            } else if (direction === -1) {
+              //跳到上一个调查表
+              this.tableIndex--;
+            } else {
               return;
             }
-            // if (tableIndex >= questionTableIds[blockIndex].length) {
-            //   tableIndex = 0;
-            //   blockIndex++;
-            //   if (blockIndex >= questionTableIds.length) {
-            //     // 问题回答完毕
-            //     blockIndex = 0;
-            //     return;
-            //   }
-            // }
             this.fetch(this.questionTableIdsOneD[this.tableIndex]);
           }
         }

@@ -10,7 +10,9 @@
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
           <a-form-item label="今日随访">
-            <a-checkbox v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"></a-checkbox>
+            <a-checkbox
+              v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
+            ></a-checkbox>
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
@@ -108,6 +110,13 @@ const columns = [
     customRender: text => getDictTitleByValue(text, "educationLevels")
   },
   {
+    title: "分娩方式",
+    dataIndex: "deliveryWay",
+    align: "center",
+    width: "10%",
+    customRender: text => getDictTitleByValue(text, "deliveryModes")
+  },
+  {
     title: "婚姻状况",
     dataIndex: "married",
     align: "center",
@@ -131,8 +140,9 @@ export default {
       columns,
       loading: false,
       pagination: {
-        pageSize: 15,
+        pageSize: 30,
         total: 0,
+        showTotal: total => `共 ${total} 条`,
         current: 1
       },
       form: this.$form.createForm(this)
