@@ -30,18 +30,15 @@
       </a-form-item>
       <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="年龄">
         <a-input-number
-          :min="1"
+          :min="18"
+          :max="60"
           v-decorator="[
             'age',
             { rules: [{ required: true, message: '年龄必填！' }] }
           ]"
         />
       </a-form-item>
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label="所在病区"
-      >
+      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所在病区">
         <a-select
           v-decorator="[
             'inpatientArea',
@@ -52,16 +49,12 @@
             v-for="item in dicts.inpatientArea"
             :key="item.value"
             :value="item.value"
-            >{{ item.title }}</a-select-option
-          >
+          >{{ item.title }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item
-        :labelCol="labelCol"
-        :wrapperCol="wrapperCol"
-        label="入组时间"
-      >
+      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="入组时间">
         <a-date-picker
+          :disabled="true"
           v-decorator="[
             'checkInTime',
             {

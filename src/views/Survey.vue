@@ -23,14 +23,13 @@
                 gotoQuestionTable(item, index);
               }
             "
-            >{{ item }}</a-button
-          >
+          >{{ item }}</a-button>
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form">
           <a-form-item
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol"
+            :labelCol="needLineFeed(item.questionName) ? rowCol : labelCol"
+            :wrapperCol="needLineFeed(item.questionName) ? rowCol : wrapperCol"
             v-for="item in formItems"
             :key="item.questionId"
             :label="item.questionName"
@@ -60,10 +59,10 @@
                 :value="optionItem.questionItemId"
               >
                 {{
-                  optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                optionItem.questionItemName +
+                "(分值:" +
+                optionItem.score +
+                ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -92,10 +91,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                      optionItem.questionItemName +
-                        "(分值:" +
-                        optionItem.score +
-                        ")"
+                    optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -173,9 +172,11 @@
                 }
               ]"
             />
-            <span class="ant-form-text" v-if="item.suffix">{{
+            <span class="ant-form-text" v-if="item.suffix">
+              {{
               item.suffix
-            }}</span>
+              }}
+            </span>
           </a-form-item>
         </a-form>
         <a-row>
@@ -188,8 +189,7 @@
                   saveHandler(false);
                 }
               "
-              >暂存</a-button
-            >
+            >暂存</a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -201,8 +201,7 @@
                   saveHandler(-1);
                 }
               "
-              >上一页</a-button
-            >
+            >上一页</a-button>
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -214,8 +213,7 @@
                   saveHandler(1);
                 }
               "
-              >下一页</a-button
-            >
+            >下一页</a-button>
           </a-col>
         </a-row>
       </a-col>
@@ -253,6 +251,7 @@ export default {
       basicInfo: {},
       labelCol: { span: 7 },
       wrapperCol: { span: 12 },
+      rowCol: { span: 24 },
       formItems: [],
       tableName: "",
       titles: [
@@ -345,6 +344,9 @@ export default {
     this.fetch(this.questionTableIdsOneD[this.tableIndex]);
   },
   methods: {
+    needLineFeed(label = "") {
+      return label.length > 25;
+    },
     reset() {
       this.deliveyWay = 0;
     },
