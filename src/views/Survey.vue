@@ -26,14 +26,15 @@
           >{{ item }}</a-button>
         </a-row>
         <p class="question-title">{{ tableName }}</p>
-        <a-form :form="form">
+        <a-form :form="form" class="form">
           <a-form-item
-            :labelCol="needLineFeed(item.questionName) ? rowCol : labelCol"
-            :wrapperCol="needLineFeed(item.questionName) ? rowCol : wrapperCol"
+            :labelCol="rowCol"
+            :wrapperCol="rowCol"
             v-for="item in formItems"
             :key="item.questionId"
-            :label="item.questionName"
+            :label="item.location+'. '+item.questionName"
             :hidden="!showFormItem(item.deliveyWay)"
+            hasFeedback
           >
             <!-- 问题类型(10-选择题(单选) 11-选择题（多选） 20-填空题) -->
             <a-radio-group
@@ -57,6 +58,7 @@
                 v-for="optionItem in item.questionItemVOList"
                 :key="optionItem.questionItemId"
                 :value="optionItem.questionItemId"
+                @dblclick="event=>{dblclickHandler(item.questionId, event)}"
               >
                 {{
                 optionItem.questionItemName +
@@ -344,6 +346,11 @@ export default {
     this.fetch(this.questionTableIdsOneD[this.tableIndex]);
   },
   methods: {
+    dblclickHandler(fieldName) {
+      const data = {};
+      data[fieldName] = null;
+      this.form.setFieldsValue(data);
+    },
     needLineFeed(label = "") {
       return label.length > 25;
     },
@@ -360,6 +367,8 @@ export default {
         this.formItems = res.data.questionVOList;
         this.tableName = res.data.questionnaireName;
         this.questionnaireId = res.data.questionnaireId;
+
+        window.scrollTo(0, 0);
 
         if (modeIds.indexOf(this.questionnaireId) !== -1) {
           if (!res.data.mode) {
@@ -468,8 +477,9 @@ export default {
 .survey {
   margin-bottom: 200px;
   .question-title {
-    font-size: 16px;
+    font-size: 18px;
     margin: 10px 20px 20px 20px;
+    font-weight: 800;
   }
   .input-short {
     width: 200px;
@@ -481,6 +491,9 @@ export default {
     color: #40a9ff;
     background-color: #fff;
     border-color: #40a9ff;
+  }
+  .form {
+    padding: 0 20px;
   }
 }
 </style>

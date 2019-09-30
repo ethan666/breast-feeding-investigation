@@ -1,9 +1,7 @@
 <template>
   <div class="main">
     <feed-head />
-    <keep-alive>
-      <router-view />
-    </keep-alive>
+    <router-view />
   </div>
 </template>
 

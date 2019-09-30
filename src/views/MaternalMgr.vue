@@ -9,10 +9,14 @@
           <a-form-item label="产妇姓名">
             <a-input v-decorator="['userNameLike']" />
           </a-form-item>
-          <a-form-item label="今日随访">
+          <!-- <a-form-item label="今日随访">
             <a-checkbox
               v-decorator="['isTodayFollowUp', { valuePropName: 'checked' }]"
             ></a-checkbox>
+          </a-form-item>-->
+
+          <a-form-item label="随访日期">
+            <a-date-picker v-decorator="['todayFollowUpDay']" />
           </a-form-item>
 
           <a-form-item label="产后/术后三天">
@@ -174,6 +178,12 @@ export default {
     query() {
       this.form.validateFields((err, values) => {
         if (!err) {
+          if (values.todayFollowUpDay) {
+            const time = values.todayFollowUpDay.valueOf();
+            const date = new Date(time);
+
+            values.todayFollowUpDay = date.setHours(0, 0, 0, 0);
+          }
           if (values.postpartum3day) {
             const time = values.postpartum3day.valueOf();
             const date = new Date(time);
