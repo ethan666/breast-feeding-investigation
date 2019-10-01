@@ -22,9 +22,6 @@
           <a-form-item label="产后/术后三天">
             <a-date-picker v-decorator="['postpartum3day']" />
           </a-form-item>
-          <!-- <a-form-item label="入院日期">
-              <a-range-picker />
-          </a-form-item>-->
           <a-form-item>
             <a-button type="primary" @click="query">查询</a-button>
           </a-form-item>
@@ -66,6 +63,9 @@ import BasicInfoFormModal from "@/views/BasicInfoFormModal";
 import { deleteMaternalReq, queryMaternalReq } from "@/api/maternal";
 import { timeFtt } from "@/utils/time";
 import { getDictTitleByValue } from "@/utils/dictUtil";
+import { mapState, mapMutations } from "vuex";
+import moment from "moment";
+import { deepClone } from "@/utils/utils";
 
 const columns = [
   {
@@ -144,7 +144,7 @@ export default {
       columns,
       loading: false,
       pagination: {
-        pageSize: 30,
+        pageSize: 4,
         total: 0,
         showTotal: total => `共 ${total} 条`,
         current: 1
@@ -152,11 +152,54 @@ export default {
       form: this.$form.createForm(this)
     };
   },
+  computed: {
+    ...mapState({
+      current: state => state.query.current,
+      userId: state => state.query.userId,
+      userNameLike: state => state.query.userNameLike,
+      todayFollowUpDay: state => state.query.todayFollowUpDay,
+      postpartum3day: state => state.query.postpartum3day
+    })
+  },
   mounted() {
-    this.fetch();
+    this.pagination.current = this.current;
+
+    const params = {};
+    params.userId = this.userId;
+    params.userNameLike = this.userNameLike;
+    params.todayFollowUpDay = this.todayFollowUpDay;
+    params.postpartum3day = this.postpartum3day;
+
+    Object.keys(params).forEach(key => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
+
+    const fields = deepClone(params);
+    if (fields.todayFollowUpDay) {
+      fields.todayFollowUpDay = moment(
+        new Date(Number(fields.todayFollowUpDay))
+      );
+    }
+    if (fields.postpartum3day) {
+      fields.postpartum3day = moment(new Date(Number(fields.postpartum3day)));
+    }
+
+    this.form.setFieldsValue(fields);
+
+    this.fetch(params);
   },
   methods: {
+    ...mapMutations(["SET_CURRENT", "SET_OTHERS"]),
     async fetch(params = {}) {
+      const payload = {};
+      payload.userId = params.userId;
+      payload.userNameLike = params.userNameLike;
+      payload.todayFollowUpDay = params.todayFollowUpDay;
+      payload.postpartum3day = params.postpartum3day;
+      this.SET_OTHERS(payload);
+
       const { pageSize, current } = this.pagination;
       const newParams = {
         ...params,
@@ -170,10 +213,23 @@ export default {
       }
     },
     handleTableChange(pagination, filters, sorter) {
+      this.SET_CURRENT({ current: pagination.current });
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
-      this.fetch();
+
+      const params = {};
+      params.userId = this.userId;
+      params.userNameLike = this.userNameLike;
+      params.todayFollowUpDay = this.todayFollowUpDay;
+      params.postpartum3day = this.postpartum3day;
+
+      Object.keys(params).forEach(key => {
+        if (params[key] === undefined) {
+          delete params[key];
+        }
+      });
+      this.fetch(params);
     },
     query() {
       this.form.validateFields((err, values) => {

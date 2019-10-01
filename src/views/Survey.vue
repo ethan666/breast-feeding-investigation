@@ -23,7 +23,8 @@
                 gotoQuestionTable(item, index);
               }
             "
-          >{{ item }}</a-button>
+            >{{ item }}</a-button
+          >
         </a-row>
         <p class="question-title">{{ tableName }}</p>
         <a-form :form="form" class="form">
@@ -32,10 +33,16 @@
             :wrapperCol="rowCol"
             v-for="item in formItems"
             :key="item.questionId"
-            :label="item.location+'. '+item.questionName"
             :hidden="!showFormItem(item.deliveyWay)"
-            hasFeedback
           >
+            <template v-slot:label>
+              <label :for="item.questionId">
+                {{ `${item.location}. ${item.questionName}` }}
+                <span class="blank-identify">
+                  {{ item.hadValue ? "" : "（未填）" }}
+                </span>
+              </label>
+            </template>
             <!-- 问题类型(10-选择题(单选) 11-选择题（多选） 20-填空题) -->
             <a-radio-group
               v-if="item.questionType === 10"
@@ -58,13 +65,17 @@
                 v-for="optionItem in item.questionItemVOList"
                 :key="optionItem.questionItemId"
                 :value="optionItem.questionItemId"
-                @dblclick="event=>{dblclickHandler(item.questionId, event)}"
+                @dblclick="
+                  event => {
+                    dblclickHandler(item.questionId, event);
+                  }
+                "
               >
                 {{
-                optionItem.questionItemName +
-                "(分值:" +
-                optionItem.score +
-                ")"
+                  optionItem.questionItemName +
+                    "(分值:" +
+                    optionItem.score +
+                    ")"
                 }}
               </a-radio>
             </a-radio-group>
@@ -93,10 +104,10 @@
                 >
                   <a-checkbox :value="optionItem.questionItemId">
                     {{
-                    optionItem.questionItemName +
-                    "(分值:" +
-                    optionItem.score +
-                    ")"
+                      optionItem.questionItemName +
+                        "(分值:" +
+                        optionItem.score +
+                        ")"
                     }}
                   </a-checkbox>
                 </a-col>
@@ -175,9 +186,7 @@
               ]"
             />
             <span class="ant-form-text" v-if="item.suffix">
-              {{
-              item.suffix
-              }}
+              {{ item.suffix }}
             </span>
           </a-form-item>
         </a-form>
@@ -191,7 +200,8 @@
                   saveHandler(false);
                 }
               "
-            >暂存</a-button>
+              >暂存</a-button
+            >
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -203,7 +213,8 @@
                   saveHandler(-1);
                 }
               "
-            >上一页</a-button>
+              >上一页</a-button
+            >
           </a-col>
           <a-col class="btn" :span="3">
             <a-button
@@ -215,7 +226,8 @@
                   saveHandler(1);
                 }
               "
-            >下一页</a-button>
+              >下一页</a-button
+            >
           </a-col>
         </a-row>
       </a-col>
@@ -337,6 +349,15 @@ export default {
             _this.deliveyWay = 2;
           }
         }
+
+        // 判断问题是否已经回答
+        const cKey = Object.keys(values)[0];
+        if (cKey) {
+          const cItem = _this.formItems.find(item => item.questionId === cKey);
+          if (cItem) {
+            cItem.hadValue = Boolean(values[cKey]);
+          }
+        }
       }
     });
   },
@@ -390,6 +411,8 @@ export default {
               this.deliveyWay = 2;
             }
           }
+
+          item.hadValue = Boolean(item.askVO);
         });
       } else {
         this.formItems = [];
@@ -494,6 +517,9 @@ export default {
   }
   .form {
     padding: 0 20px;
+  }
+  .blank-identify {
+    color: #f00;
   }
 }
 </style>

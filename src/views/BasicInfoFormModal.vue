@@ -38,7 +38,11 @@
           ]"
         />
       </a-form-item>
-      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="所在病区">
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="所在病区"
+      >
         <a-select
           v-decorator="[
             'inpatientArea',
@@ -49,10 +53,15 @@
             v-for="item in dicts.inpatientArea"
             :key="item.value"
             :value="item.value"
-          >{{ item.title }}</a-select-option>
+            >{{ item.title }}</a-select-option
+          >
         </a-select>
       </a-form-item>
-      <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="入组时间">
+      <a-form-item
+        :labelCol="labelCol"
+        :wrapperCol="wrapperCol"
+        label="入组时间"
+      >
         <a-date-picker
           :disabled="true"
           v-decorator="[
