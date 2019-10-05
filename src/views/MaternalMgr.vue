@@ -144,7 +144,7 @@ export default {
       columns,
       loading: false,
       pagination: {
-        pageSize: 4,
+        pageSize: 30,
         total: 0,
         showTotal: total => `共 ${total} 条`,
         current: 1
@@ -201,6 +201,8 @@ export default {
       this.SET_OTHERS(payload);
 
       const { pageSize, current } = this.pagination;
+      this.SET_CURRENT({ current });
+
       const newParams = {
         ...params,
         limit: pageSize,
@@ -213,7 +215,6 @@ export default {
       }
     },
     handleTableChange(pagination, filters, sorter) {
-      this.SET_CURRENT({ current: pagination.current });
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
