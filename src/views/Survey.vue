@@ -355,7 +355,7 @@ export default {
         if (cKey) {
           const cItem = _this.formItems.find(item => item.questionId === cKey);
           if (cItem) {
-            cItem.hadValue = Boolean(values[cKey]) || values[cKey]===0;
+            cItem.hadValue = Boolean(values[cKey]) || values[cKey] === 0;
           }
         }
       }

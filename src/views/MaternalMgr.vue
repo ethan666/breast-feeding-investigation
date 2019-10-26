@@ -147,7 +147,8 @@ export default {
         pageSize: 30,
         total: 0,
         showTotal: total => `共 ${total} 条`,
-        current: 1
+        current: 1,
+        showQuickJumper: true
       },
       form: this.$form.createForm(this)
     };
