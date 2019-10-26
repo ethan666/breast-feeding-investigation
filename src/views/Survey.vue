@@ -65,6 +65,11 @@
                 v-for="optionItem in item.questionItemVOList"
                 :key="optionItem.questionItemId"
                 :value="optionItem.questionItemId"
+                :disabled="
+                  item.questionId === 'A4_2' &&
+                    disableA4_2 &&
+                    optionItem.questionItemId === 'A4_2-1'
+                "
                 @dblclick="
                   event => {
                     dblclickHandler(item.questionId, event);
@@ -294,7 +299,8 @@ export default {
       questionnaireId: "",
       deliveyWay: 0, //表单中某一项是否需要展示
       moment,
-      tableIndex: 0
+      tableIndex: 0,
+      disableA4_2: false //是否曾进行剖腹产
     };
   },
   computed: {
@@ -347,6 +353,15 @@ export default {
             _this.deliveyWay = 1;
           } else if (values.B0 === "B0-2") {
             _this.deliveyWay = 2;
+          }
+        }
+
+        // 判断T0, A4_1勾选情况
+        if (values.A4_1 !== undefined) {
+          if (values.A4_1 === "A4_1-1") {
+            _this.disableA4_2 = true;
+          } else if (values.A4_1 === "A4_1-2") {
+            _this.disableA4_2 = false;
           }
         }
 
