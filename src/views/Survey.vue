@@ -248,7 +248,7 @@ import notification from "ant-design-vue/es/notification";
 import { getDictTitleByValue } from "@/utils/dictUtil";
 
 const questionTableIds = [
-  ["T0", "A11", "A12", "A13", "A14", "A15"],
+  ["T0", "A11", "A12", "A13", "A14"],
   ["B", "B8", "b11_2"],
   ["C0", "C4", "C5", "C6", "C7", "C8"],
   ["D0", "D8"],
